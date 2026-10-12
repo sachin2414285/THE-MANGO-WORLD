@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kisan Yojana Portal - किसान योजना पोर्टल</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><path fill="%23ffffff" fill-opacity="0.05" d="M0 400c100-50 200-50 300 0s200 50 300 0 200-50 300 0 200 50 300 0V800H0V400z"/><path fill="%23ffffff" fill-opacity="0.03" d="M0 500c100 50 200 50 300 0s200-50 300 0 200 50 300 0 200-50 300 0V800H0V500z"/></svg>');
+            background-size: cover;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 60px;
+        }
+
+        h1 {
+            color: #2d3748;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            color: #4a5568;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        .language-toggle {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .lang-btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+
+        .lang-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .search-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-btn {
+            padding: 15px 35px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .schemes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .scheme-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            border-left: 5px solid #667eea;
+        }
+
+        .scheme-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .scheme-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .scheme-title {
+            color: #2d3748;
+            font-size: 1.4em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .scheme-type {
+            display: inline-block;
+            padding: 5px 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-bottom: 15px;
+        }
+
+        .scheme-details {
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+        }
+
+        .info-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 12px;
+            border-left: 4px solid #48bb78;
+        }
+
+        .info-section h4 {
+            color: #2d3748;
+            font-size: 1.05em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-section p, .info-section ul {
+            color: #4a5568;
+            line-height: 1.7;
+            font-size: 0.92em;
+        }
+
+        .info-section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .info-section ul li {
+            padding: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .info-section ul li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .eligibility-box {
+            background: #e6fffa;
+            border-left-color: #38b2ac;
+        }
+
+        .benefits-box {
+            background: #fef5e7;
+            border-left-color: #f59e0b;
+        }
+
+        .steps-box {
+            background: #ede9fe;
+            border-left-color: #8b5cf6;
+        }
+
+        .contact-box {
+            background: #fce7f3;
+            border-left-color: #ec4899;
+        }
+
+        .scheme-location {
+            color: #718096;
+            font-size: 0.9em;
+            margin: 15px 0;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .update-date {
+            display: inline-block;
+            padding: 8px 15px;
+            background: #e2e8f0;
+            color: #4a5568;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-top: 15px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            color: #4a5568;
+        }
+
+        .no-results-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: white;
+            margin-top: 40px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .schemes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+
+            .search-input {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-overlay"></div>
+    
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo">🌾</div>
+                <div>
+                    <h1 id="mainTitle">किसान योजना पोर्टल</h1>
+                    <p class="tagline" id="tagline">सरकारी योजनाओं की पूरी जानकारी - फ्री खाद और बीज</p>
+                </div>
+            </div>
+            <div class="language-toggle">
+                <button class="lang-btn active" onclick="changeLanguage('hi')" id="hindiBtn">हिंदी</button>
+                <button class="lang-btn" onclick="changeLanguage('en')" id="englishBtn">English</button>
+            </div>
+        </header>
+
+        <div class="search-section">
+            <h2 id="searchTitle" style="margin-bottom: 20px; color: #2d3748;">🔍 अपने शहर की योजनाएं खोजें</h2>
+            <div class="search-box">
+                <input type="text" class="search-input" id="citySearch" placeholder="अपने शहर या राज्य का नाम लिखें...">
+                <button class="search-btn" onclick="searchSchemes()" id="searchBtn">खोजें</button>
+            </div>
+        </div>
+
+        <div id="schemesContainer" class="schemes-grid"></div>
+    </div>
+
+    <footer>
+        <p id="footerText">किसान योजना पोर्टल - भारतीय किसानों के लिए सरकारी योजनाओं की जानकारी</p>
+        <p style="margin-top: 10px; font-size: 0.9em;" id="disclaimerText">नोट: यह जानकारी केवल सूचना के लिए है। कृपया अपने स्थानीय कृषि विभाग से संपर्क करें।</p>
+    </footer>
+
+    <script>
+        let currentLanguage = 'hi';
+
+        const schemes = {
+            hi: [
+                {
+                    icon: "🌱",
+                    title: "प्रधानमंत्री किसान सम्मान निधि (PM-KISAN)",
+                    type: "केंद्र सरकार योजना",
+                    details: "सभी भूमिधारक किसान परिवारों को प्रति वर्ष ₹6000 की आर्थिक सहायता",
+                    whatYouGet: "साल में तीन किस्तों में ₹2000-₹2000 सीधे बैंक खाते में। इस पैसे से आप फ्री बीज, खाद, और अन्य कृषि सामग्री खरीद सकते हैं।",
+                    eligibility: [
+                        "सभी भूमिधारक किसान परिवार",
+                        "2 हेक्टेयर तक की जमीन वाले किसान प्राथमिकता",
+                        "आधार कार्ड और बैंक खाता अनिवार्य"
+                    ],
+                    howToApply: [
+                        "PM-KISAN की आधिकारिक वेबसाइट pmkisan.gov.in पर जाएं",
+                        "Farmers Corner में 'New Farmer Registration' पर क्लिक करें",
+                        "आधार नंबर, बैंक डिटेल्स और जमीन के कागजात अपलोड करें",
+                        "या नजदीकी CSC सेंटर / पटवारी से संपर्क करें"
+                    ],
+                    contact: "हेल्पलाइन: 155261 / 011-24300606 | ईमेल: pmkisan-ict@gov.in | वेबसाइट: pmkisan.gov.in",
+                    location: "पूरे भारत में लागू",
+                    lastUpdated: "अक्टूबर 2024",
+                    cities: ["सभी शहर", "दिल्ली", "मुंबई", "कानपुर", "लखनऊ", "पटना", "जयपुर"]
+                },
+                {
+                    icon: "💧",
+                    title: "मृदा स्वास्थ्य कार्ड योजना",
+                    type: "केंद्र सरकार योजना",
+                    details: "किसानों को फ्री मिट्टी परीक्षण और उर्वरक सिफारिश की सुविधा",
+                    whatYouGet: "फ्री में मिट्टी की पूरी जांच, मिट्टी के अनुसार खाद की सही मात्रा की जानकारी, और फसल के लिए सुझाव। इससे खाद की बचत 15-20% तक हो सकती है।",
+                    eligibility: [
+                        "सभी किसान जिनके पास खेती की जमीन है",
+                        "छोटे और सीमांत किसानों को प्राथमिकता",
+                        "कोई आय सीमा नहीं"
+                    ],
+                    howToApply: [
+                        "अपने नजदीकी कृषि विज्ञान केंद्र (KVK) में जाएं",
+                        "मिट्टी का नमूना लेने के लिए आवेदन करें",
+                        "अधिकारी आपके खेत से मिट्टी का नमूना लेंगे",
+                        "15-20 दिन में सॉइल हेल्थ कार्ड मिलेगा"
+                    ],
+                    contact: "जिला कृषि अधिकारी / नजदीकी कृषि विज्ञान केंद्र | हेल्पलाइन: 011-26862183",
+                    location: "सभी राज्यों में उपलब्ध",
+                    lastUpdated: "सितम्बर 2024",
+                    cities: ["सभी शहर", "कानपुर", "आगरा", "मेरठ", "वाराणसी", "इलाहाबाद"]
+                },
+                {
+                    icon: "🌾",
+                    title: "राष्ट्रीय खाद्य सुरक्षा मिशन (NFSM)",
+                    type: "केंद्र सरकार योजना",
+                    details: "गेहूं, धान, दलहन के लिए फ्री उन्नत बीज और सब्सिडी पर खाद",
+                    whatYouGet: "उन्नत किस्म के बीज 50% सब्सिडी पर या फ्री, DAP/NPK खाद पर 50% छूट, कृषि उपकरण पर सहायता, और मुफ्त कृषि प्रशिक्षण।",
+                    eligibility: [
+                        "चयनित जिलों के सभी किसान",
+                        "गेहूं, धान, दलहन, मोटे अनाज उगाने वाले",
+                        "2 हेक्टेयर से कम जमीन वालों को प्राथमिकता"
+                    ],
+                    howToApply: [
+                        "जिला कृषि कार्यालय में जाएं",
+                        "NFSM आवेदन फॉर्म भरें",
+                        "जमीन के कागजात और आधार की कॉपी जमा करें",
+                        "बीज वितरण कैंप में भाग लें"
+                    ],
+                    contact: "जिला कृषि अधिकारी | हेल्पलाइन: 011-23382012 | nfsm.dac@gov.in",
+                    location: "चयनित 638 जिलों में",
+                    lastUpdated: "अक्टूबर 2024",
+                    cities: ["कानपुर", "लखनऊ", "पटना", "भोपाल", "रायपुर", "रांची"]
+                },
+                {
+                    icon: "🚜",
+                    title: "उत्तर प्रदेश कृषि उपकरण अनुदान योजना",
+                    type: "राज्य सरकार योजना (UP)",
+                    details: "कृषि यंत्रों और उपकरणों पर 50% तक की सब्सिडी",
+                    whatYouGet: "ट्रैक्टर, सीड ड्रिल, रोटावेटर, स्प्रेयर जैसे उपकरण 50% सब्सिडी पर। छोटे किसानों को 80% तक सब्सिडी। बैंक लोन की सुविधा।",
+                    eligibility: [
+                        "उत्तर प्रदेश के सभी किसान",
+                        "SC/ST किसानों को 80% सब्सिडी",
+                        "सामान्य किसानों को 50% सब्सिडी",
+                        "महिला किसानों को विशेष प्राथमिकता"
+                    ],
+                    howToApply: [
+                        "upagriculture.com या DBT Agriculture UP पोर्टल पर जाएं",
+                        "Registration करें और लॉगिन करें",
+                        "कृषि यंत्र अनुदान का विकल्प चुनें",
+                        "आवश्यक दस्तावेज अपलोड करें और submit करें"
+                    ],
+                    contact: "कृषि विभाग, उत्तर प्रदेश | हेल्पलाइन: 0522-2286011 | upagriculture.com",
+                    location: "उत्तर प्रदेश के सभी जिले",
+                    lastUpdated: "नवम्बर 2024",
+                    cities: ["कानपुर", "लखनऊ", "आगरा", "मेरठ", "वाराणसी", "गाजियाबाद", "इलाहाबाद"]
+                },
+                {
+                    icon: "🌿",
+                    title: "जैविक खेती प्रोत्साहन योजना (परंपरागत कृषि विकास योजना)",
+                    type: "केंद्र + राज्य योजना",
+                    details: "जैविक खाद और बीज पर विशेष छूट और प्रोत्साहन राशि",
+                    whatYouGet: "₹50,000 प्रति हेक्टेयर 3 साल के लिए (कुल ₹1.5 लाख), फ्री वर्मीकंपोस्ट यूनिट, जैविक खाद पर सब्सिडी, जैविक प्रमाणन की सुविधा, बेहतर बाजार दाम।",
+                    eligibility: [
+                        "सभी किसान जो जैविक खेती करना चाहते हैं",
+                        "किसान समूह बनाना जरूरी (50 किसान)",
+                        "कम से कम 50 एकड़ क्षेत्र में क्लस्टर बनाना होगा"
+                    ],
+                    howToApply: [
+                        "50 किसानों का समूह बनाएं",
+                        "जिला बागवानी / कृषि अधिकारी से संपर्क करें",
+                        "PKVY (परंपरागत कृषि विकास योजना) में रजिस्ट्रेशन करें",
+                        "ऑनलाइन आवेदन pgsindia-ncof.gov.in पर करें"
+                    ],
+                    contact: "जिला बागवानी अधिकारी | National Centre of Organic Farming: 0141-2770292",
+                    location: "सभी राज्यों में लागू",
+                    lastUpdated: "अक्टूबर 2024",
+                    cities: ["सभी शहर", "पुणे", "नागपुर", "सूरत", "अहमदाबाद", "जयपुर"]
+                },
+                {
+                    icon: "💰",
+                    title: "किसान क्रेडिट कार्ड (KCC)",
+                    type: "केंद्र सरकार योजना",
+                    details: "बीज, खाद, कीटनाशक खरीदने के लिए कम ब्याज पर ऋण",
+                    whatYouGet: "₹3 लाख तक का लोन केवल 4% ब्याज पर (समय से चुकाने पर), खाद-बीज खरीदने की सुविधा, फसल बीमा फ्री, एटीएम कार्ड की सुविधा।",
+                    eligibility: [
+                        "सभी किसान (छोटे और बड़े)",
+                        "भूमि के कागजात होने चाहिए",
+                        "किराये की जमीन पर खेती करने वाले भी पात्र",
+                        "मछली पालन, पशुपालन करने वाले भी आवेदन कर सकते हैं"
+                    ],
+                    howToApply: [
+                        "नजदीकी बैंक (SBI, PNB, BOB आदि) में जाएं",
+                        "KCC आवेदन फॉर्म भरें",
+                        "आधार, जमीन के कागजात, पासपोर्ट फोटो जमा करें",
+                        "15 दिन में KCC मिल जाएगा"
+                    ],
+                    contact: "नजदीकी बैंक या CSC सेंटर | KCC हेल्पलाइन: 1800-180-1551",
+                    location: "पूरे भारत में सभी बैंकों में",
+                    lastUpdated: "नवम्बर 2024",
+                    cities: ["सभी शहर", "दिल्ली", "मुंबई", "कोलकाता", "चेन्नई", "बेंगलुरु"]
+                },
+                {
+                    icon: "🌻",
+                    title: "बिहार राज्य बीज निगम बीज वितरण योजना",
+                    type: "राज्य सरकार योजना (बिहार)",
+                    details: "धान, गेहूं, मक्का के उन्नत बीज 50-75% सब्सिडी पर",
+                    whatYouGet: "उन्नत किस्म के बीज 50% से 75% सब्सिडी पर, कुछ जिलों में पूरी तरह फ्री बीज, DAP और यूरिया पर सब्सिडी, घर पर डिलीवरी की सुविधा।",
+                    eligibility: [
+                        "बिहार के सभी किसान",
+                        "छोटे किसान (2 हेक्टेयर तक) को प्राथमिकता",
+                        "SC/ST किसानों को 75% सब्सिडी"
+                    ],
+                    howToApply: [
+                        "DBT Agriculture Bihar पोर्टल dbtagriculture.bihar.gov.in पर जाएं",
+                        "Registration और लॉगिन करें",
+                        "बीज अनुदान योजना का चयन करें",
+                        "या नजदीकी कृषि कार्यालय में जाकर आवेदन करें"
+                    ],
+                    contact: "बिहार कृषि विभाग | हेल्पलाइन: 0612-2233555 | बिहार राज्य बीज निगम: 0612-2546080",
+                    location: "बिहार के सभी 38 जिले",
+                    lastUpdated: "अक्टूबर 2024",
+                    cities: ["पटना", "गया", "भागलपुर", "मुजफ्फरपुर", "दरभंगा", "आरा"]
+                },
+                {
+                    icon: "🏵️",
+                    title: "राजस्थान मुख्यमंत्री किसान साथी योजना",
+                    type: "राज्य सरकार योजना (राजस्थान)",
+                    details: "बीज, खाद, कृषि यंत्र और ड्रिप सिंचाई पर भारी सब्सिडी",
+                    whatYouGet: "बीज पर 50% छूट, DAP/NPK खाद पर सब्सिडी, ड्रिप इरिगेशन पर 60% सब्सिडी, स्प्रिंकलर सेट पर 75% सब्सिडी, फ्री कृषि प्रशिक्षण।",
+                    eligibility: [
+                        "राजस्थान के सभी किसान",
+                        "छोटे और सीमांत किसानों को 60% सब्सिडी",
+                        "बड़े किसानों को 50% सब्सिडी",
+                        "महिला किसानों को अतिरिक्त 5% छूट"
+                    ],
+                    howToApply: [
+                        "राज किसान साथी पोर्टल rajkisan.rajasthan.gov.in पर जाएं",
+                        "SSO ID से लॉगिन करें (या बनाएं)",
+                        "किसान कल्याण योजना में आवेदन करें",
+                        "ई-मित्र केंद्र से भी आवेदन कर सकते हैं"
+                    ],
+                    contact: "कृषि विभाग, राजस्थान | हेल्पलाइन: 0141-2227849 | rajkisan.rajasthan.gov.in",
+                    location: "राजस्थान के सभी जिले",
+                    lastUpdated: "नवम्बर 2024",
+                    cities: ["जयपुर", "जोधपुर", "उदयपुर", "कोटा", "अजमेर", "बीकानेर"]
+                }
+            ],
+            en: [
+                {
+                    icon: "🌱",
+                    title: "PM-KISAN (Pradhan Mantri Kisan Samman Nidhi)",
+                    type: "Central Government Scheme",
+                    details: "Financial assistance of ₹6000 per year to all landholding farmer families",
+                    whatYouGet: "₹2000-₹2000 in three installments directly to bank account. Use this money to buy seeds, fertilizers, and other agricultural supplies.",
+                    eligibility: [
+                        "All landholding farmer families",
+                        "Priority to farmers with up to 2 hectares land",
+                        "Aadhaar card and bank account mandatory"
+                    ],
+                    howToApply: [
+                        "Visit PM-KISAN official website pmkisan.gov.in",
+                        "Click 'New Farmer Registration' in Farmers Corner",
+                        "Upload Aadhaar, bank details and land documents",
+                        "Or contact nearest CSC center / Patwari"
+                    ],
+                    contact: "Helpline: 155261 / 011-24300606 | Email: pmkisan-ict@gov.in | Website: pmkisan.gov.in",
+                    location: "All over India",
+                    lastUpdated: "October 2024",
+                    cities: ["all cities", "delhi", "mumbai", "kanpur", "lucknow", "patna", "jaipur"]
+                },
+                {
+                    icon: "💧",
+                    title: "Soil Health Card Scheme",
+                    type: "Central Government Scheme",
+                    details: "Free soil testing and fertilizer recommendations for farmers",
+                    whatYouGet: "Complete free soil analysis, correct fertilizer dosage information, crop-specific recommendations. Can save 15-20% on fertilizer costs.",
+                    eligibility: [
+                        "All farmers with agricultural land",
+                        "Priority to small and marginal farmers",
+                        "No income limit"
+                    ],
+                    howToApply: [
+                        "Visit nearest Krishi Vigyan Kendra (KVK)",
+                        "Apply for soil sample collection",
+                        "Officials will collect soil from your farm",
+                        "Receive Soil Health Card in 15-20 days"
+                    ],
+                    contact: "District Agriculture Officer / Nearest KVK | Helpline: 011-26862183",
+                    location: "Available in all states",
+                    lastUpdated: "September 2024",
+                    cities: ["all cities", "kanpur", "agra", "meerut", "varanasi", "allahabad"]
+                },
+                {
+                    icon: "🌾",
+                    title: "National Food Security Mission (NFSM)",
+                    type: "Central Government Scheme",
+                    details: "Free improved seeds and subsidized fertilizers for wheat, rice, pulses",
+                    whatYouGet: "Improved variety seeds at 50% subsidy or free, 50% discount on DAP/NPK fertilizers, assistance on farm equipment, free agricultural training.",
+                    eligibility: [
+                        "All farmers in selected districts",
+                        "Growing wheat, rice, pulses, coarse grains",
+                        "Priority to farmers with less than 2 hectares"
+                    ],
+                    howToApply: [
+                        "Visit District Agriculture Office",
+                        "Fill NFSM application form",
+                        "Submit land documents and Aadhaar copy",
+                        "Participate in seed distribution camps"
+                    ],
+                    contact: "District Agriculture Officer | Helpline: 011-23382012 | nfsm.dac@gov.in",
+                    location: "Selected 638 districts",
+                    lastUpdated: "October 2024",
+                    cities: ["kanpur", "lucknow", "patna", "bhopal", "raipur", "ranchi"]
+                },
+                {
+                    icon: "🚜",
+                    title: "Uttar Pradesh Agricultural Equipment Subsidy Scheme",
+                    type: "State Government Scheme (UP)",
+                    details: "Up to 50% subsidy on agricultural machinery and equipment",
+                    whatYouGet: "50% subsidy on tractors, seed drills, rotavators, sprayers. Up to 80% subsidy for small farmers. Bank loan facility available.",
+                    eligibility: [
+                        "All farmers of Uttar Pradesh",
+                        "80% subsidy for SC/ST farmers",
+                        "50% subsidy for general farmers",
+                        "Special priority to women farmers"
+                    ],
+                    howToApply: [
+                        "Visit upagriculture.com or DBT Agriculture UP portal",
+                        "Register and login",
+                        "Select agricultural equipment subsidy option",
+                        "Upload required documents and submit"
+                    ],
+                    contact: "Agriculture Dept, UP | Helpline: 0522-2286011 | upagriculture.com",
+                    location: "All districts of Uttar Pradesh",
+                    lastUpdated: "November 2024",
+                    cities: ["kanpur", "lucknow", "agra", "meerut", "varanasi", "ghaziabad", "allahabad"]
+                },
+                {
+                    icon: "🌿",
+                    title: "Organic Farming Promotion Scheme (PKVY)",
+                    type: "Central + State Scheme",
+                    details: "Special discount on organic fertilizers and seeds with incentive amount",
+                    whatYouGet: "₹50,000 per hectare for 3 years (total ₹1.5 lakh), free vermicompost unit, subsidy on organic fertilizers, organic certification facility, better market prices.",
+                    eligibility: [
+                        "All farmers wanting to do organic farming",
+                        "Must form farmer groups (50 farmers)",
+                        "Need to form cluster of minimum 50 acres"
+                    ],
+                    howToApply: [
+                        "Form a group of 50 farmers",
+                        "Contact District Horticulture/Agriculture Officer",
+                        "Register in PKVY scheme",
+                        "Apply online at pgsindia-ncof.gov.in"
+                    ],
+                    contact: "District Horticulture Officer | National Centre of Organic Farming: 0141-2770292",
+                    location: "Implemented in all states",
+                    lastUpdated: "October 2024",
+                    cities: ["all cities", "pune", "nagpur", "surat", "ahmedabad", "jaipur"]
+                },
+                {
+                    icon: "💰",
+                    title: "Kisan Credit Card (KCC)",
+                    type: "Central Government Scheme",
+                    details: "Low interest loan for buying seeds, fertilizers, pesticides",
+                    whatYouGet: "Loan up to ₹3 lakhs at only 4% interest (on timely repayment), easy purchase of fertilizers and seeds, free crop insurance, ATM card facility.",
+                    eligibility: [
+                        "All farmers (small and large)",
+                        "Should have land documents",
+                        "Tenant farmers also eligible",
+                        "Fish farming, animal husbandry farmers can also apply"
+                    ],
+                    howToApply: [
+                        "Visit nearest bank (SBI, PNB, BOB etc.)",
+                        "Fill KCC application form",
+                        "Submit Aadhaar, land documents, passport photo",
+                        "Receive KCC in 15 days"
+                    ],
+                    contact: "Nearest bank or CSC center | KCC Helpline: 1800-180-1551",
+                    location: "All over India in all banks",
+                    lastUpdated: "November 2024",
+                    cities: ["all cities", "delhi", "mumbai", "kolkata", "chennai", "bangalore"]
+                },
+                {
+                    icon: "🌻",
+                    title: "Bihar State Seeds Corporation Scheme",
+                    type: "State Government Scheme (Bihar)",
+                    details: "50-75% subsidy on improved seeds of paddy, wheat, corn",
+                    whatYouGet: "Improved variety seeds at 50-75% subsidy, completely free seeds in some districts, subsidy on DAP and Urea, home delivery facility.",
+                    eligibility: [
+                        "All farmers of Bihar",
+                        "Priority to small farmers (up to 2 hectares)",
+                        "75% subsidy for SC/ST farmers"
+                    ],
+                    howToApply: [
+                        "Visit DBT Agriculture Bihar portal dbtagriculture.bihar.gov.in",
+                        "Register and login",
+                        "Select seed subsidy scheme",
+                        "Or apply at nearest agriculture office"
+                    ],
+                    contact: "Bihar Agriculture Dept | Helpline: 0612-2233555 | Bihar State Seeds Corp: 0612-2546080",
+                    location: "All 38 districts of Bihar",
+                    lastUpdated: "October 2024",
+                    cities: ["patna", "gaya", "bhagalpur", "muzaffarpur", "darbhanga", "ara"]
+                },
+                {
+                    icon: "🏵️",
+                    title: "Rajasthan Mukhyamantri Kisan Sathi Yojana",
+                    type: "State Government Scheme (Rajasthan)",
+                    details: "Heavy subsidy on seeds, fertilizers, farm equipment and drip irrigation",
+                    whatYouGet: "50% discount on seeds, subsidy on DAP/NPK fertilizers, 60% subsidy on drip irrigation, 75% subsidy on sprinkler sets, free agricultural training.",
+                    eligibility: [
+                        "All farmers of Rajasthan",
+                        "60% subsidy for small and marginal farmers",
+                        "50% subsidy for large farmers",
+                        "Additional 5% discount for women farmers"
+                    ],
+                    howToApply: [
+                        "Visit Raj Kisan Sathi portal rajkisan.rajasthan.gov.in",
+                        "Login with SSO ID (or create one)",
+                        "Apply in Farmer Welfare Scheme",
+                        "Can also apply through e-Mitra centers"
+                    ],
+                    contact: "Agriculture Dept, Rajasthan | Helpline: 0141-2227849 | rajkisan.rajasthan.gov.in",
+                    location: "All districts of Rajasthan",
+                    lastUpdated: "November 2024",
+                    cities: ["jaipur", "jodhpur", "udaipur", "kota", "ajmer", "bikaner"]
+                }
+            ]
+        };
+
+        const translations = {
+            hi: {
+                mainTitle: "किसान योजना पोर्टल",
+                tagline: "सरकारी योजनाओं की पूरी जानकारी - फ्री खाद और बीज",
+                searchTitle: "🔍 अपने शहर की योजनाएं खोजें",
+                searchPlaceholder: "अपने शहर या राज्य का नाम लिखें...",
+                searchBtn: "खोजें",
+                footerText: "किसान योजना पोर्टल - भारतीय किसानों के लिए सरकारी योजनाओं की जानकारी",
+                disclaimerText: "नोट: यह जानकारी केवल सूचना के लिए है। कृपया अपने स्थानीय कृषि विभाग से संपर्क करें।",
+                noResults: "क्षमा करें, इस शहर के लिए कोई योजना नहीं मिली। कृपया अपने जिला कृषि कार्यालय से संपर्क करें।",
+                noResultsSubtext: "सभी योजनाएं देखने के लिए सर्च बॉक्स खाली छोड़ें और खोजें बटन दबाएं।",
+                whatYouGetTitle: "🎁 क्या मिलता है",
+                eligibilityTitle: "✅ कौन आवेदन कर सकता है",
+                howToApplyTitle: "📝 कैसे आवेदन करें",
+                contactTitle: "📞 कहाँ से मिलेगा / संपर्क",
+                lastUpdatedText: "📅 अपडेट:"
+            },
+            en: {
+                mainTitle: "Kisan Yojana Portal",
+                tagline: "Complete Information on Government Schemes - Free Fertilizers & Seeds",
+                searchTitle: "🔍 Find Schemes for Your City",
+                searchPlaceholder: "Enter your city or state name...",
+                searchBtn: "Search",
+                footerText: "Kisan Yojana Portal - Government Schemes Information for Indian Farmers",
+                disclaimerText: "Note: This information is for informational purposes only. Please contact your local agriculture department.",
+                noResults: "Sorry, no schemes found for this city. Please contact your district agriculture office.",
+                noResultsSubtext: "To see all schemes, leave the search box empty and press the search button.",
+                whatYouGetTitle: "🎁 What You Get",
+                eligibilityTitle: "✅ Who Can Apply",
+                howToApplyTitle: "📝 How to Apply",
+                contactTitle: "📞 Where to Get / Contact",
+                lastUpdatedText: "📅 Updated:"
+            }
+        };
+
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            
+            document.getElementById('hindiBtn').classList.toggle('active', lang === 'hi');
+            document.getElementById('englishBtn').classList.toggle('active', lang === 'en');
+            
+            const t = translations[lang];
+            document.getElementById('mainTitle').textContent = t.mainTitle;
+            document.getElementById('tagline').textContent = t.tagline;
+            document.getElementById('searchTitle').textContent = t.searchTitle;
+            document.getElementById('citySearch').placeholder = t.searchPlaceholder;
+            document.getElementById('searchBtn').textContent = t.searchBtn;
+            document.getElementById('footerText').textContent = t.footerText;
+            document.getElementById('disclaimerText').textContent = t.disclaimerText;
+            
+            searchSchemes();
+        }
+
+        function searchSchemes() {
+            const searchTerm = document.getElementById('citySearch').value.toLowerCase().trim();
+            const container = document.getElementById('schemesContainer');
+            const currentSchemes = schemes[currentLanguage];
+            const t = translations[currentLanguage];
+            
+            let filteredSchemes = currentSchemes;
+            
+            if (searchTerm) {
+                filteredSchemes = currentSchemes.filter(scheme => 
+                    scheme.cities.some(city => city.toLowerCase().includes(searchTerm)) ||
+                    scheme.location.toLowerCase().includes(searchTerm) ||
+                    scheme.title.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            if (filteredSchemes.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <div class="no-results-icon">😔</div>
+                        <h2>${t.noResults}</h2>
+                        <p style="margin-top: 15px;">${t.noResultsSubtext}</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = filteredSchemes.map(scheme => `
+                    <div class="scheme-card">
+                        <div class="scheme-icon">${scheme.icon}</div>
+                        <h3 class="scheme-title">${scheme.title}</h3>
+                        <span class="scheme-type">${scheme.type}</span>
+                        <p class="scheme-details">${scheme.details}</p>
+                        
+                        <div class="info-section benefits-box">
+                            <h4>${t.whatYouGetTitle}</h4>
+                            <p>${scheme.whatYouGet}</p>
+                        </div>
+                        
+                        <div class="info-section eligibility-box">
+                            <h4>${t.eligibilityTitle}</h4>
+                            <ul>
+                                ${scheme.eligibility.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                        
+                        <div class="info-section steps-box">
+                            <h4>${t.howToApplyTitle}</h4>
+                            <ul>
+                                ${scheme.howToApply.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                        
+                        <div class="info-section contact-box">
+                            <h4>${t.contactTitle}</h4>
+                            <p>${scheme.contact}</p>
+                        </div>
+                        
+                        <p class="scheme-location">📍 ${scheme.location}</p>
+                        <span class="update-date">${t.lastUpdatedText} ${scheme.lastUpdated}</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        searchSchemes();
+    </script>
+</body>
+</html>

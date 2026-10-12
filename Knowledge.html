@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mango Farming Portal - आम की खेती</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-attachment: fixed;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Mango decoration */
+        .mango-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            z-index: 0;
+            pointer-events: none;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><ellipse cx="45" cy="55" rx="25" ry="35" fill="%23FFA500" transform="rotate(-20 45 55)"/><path d="M 45 25 Q 40 20 35 22 L 38 28 Z" fill="%2328a745"/></svg>');
+            background-size: 150px;
+            background-repeat: repeat;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            background: linear-gradient(135deg, #ff9a56, #ffca28);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+            border: 3px solid #ff6f00;
+        }
+
+        h1 {
+            color: #fff;
+            font-size: 2.5em;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #fff;
+            font-size: 1.2em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .lang-switch {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: #fff;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            font-weight: bold;
+            color: #ff6f00;
+        }
+
+        .lang-switch:hover {
+            transform: scale(1.05);
+            box-shadow: 0 7px 20px rgba(0,0,0,0.3);
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-tab {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+
+        .nav-tab:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #ff6f00, #ff9a56);
+        }
+
+        .content-section {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, #fff9e6, #ffe8cc);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 6px solid #ff9a56;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .info-card h3 {
+            color: #ff6f00;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .info-card p, .info-card ul {
+            line-height: 1.8;
+            font-size: 1.05em;
+        }
+
+        .info-card ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .info-card li {
+            margin-bottom: 8px;
+        }
+
+        /* Quiz Styles */
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .question-card {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 6px solid #28a745;
+        }
+
+        .question-card h3 {
+            color: #1b5e20;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .option {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .option:hover {
+            background: #fff9e6;
+            border-color: #ff9a56;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            background: #fff9e6;
+            border-color: #ff6f00;
+        }
+
+        .quiz-btn {
+            background: linear-gradient(135deg, #ff6f00, #ff9a56);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            margin: 10px;
+        }
+
+        .quiz-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #fff9e6, #ffe8cc);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 20px;
+            border: 3px solid #ff9a56;
+        }
+
+        .result-card h2 {
+            color: #ff6f00;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .score {
+            font-size: 3em;
+            color: #28a745;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            margin-top: 30px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="mango-bg"></div>
+    
+    <div class="container">
+        <header>
+            <div class="lang-switch" onclick="toggleLanguage()">
+                <span id="langBtn">English</span>
+            </div>
+            <h1 id="mainTitle">🥭 आम की खेती - किसान पोर्टल 🥭</h1>
+            <p class="subtitle" id="subtitle">आम की खेती से जुड़ी सम्पूर्ण जानकारी</p>
+        </header>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showSection('home')" id="tab1">मुख्य पृष्ठ</button>
+            <button class="nav-tab" onclick="showSection('varieties')" id="tab2">आम की किस्में</button>
+            <button class="nav-tab" onclick="showSection('cultivation')" id="tab3">खेती की विधि</button>
+            <button class="nav-tab" onclick="showSection('care')" id="tab4">देखभाल</button>
+            <button class="nav-tab" onclick="showSection('selling')" id="tab5">बिक्री</button>
+            <button class="nav-tab" onclick="showSection('quiz')" id="tab6">क्विज</button>
+        </div>
+
+        <!-- Home Section -->
+        <div id="home" class="content-section active">
+            <div class="info-card">
+                <h3 id="homeTitle">आम की खेती का परिचय</h3>
+                <p id="homeContent">आम भारत का राष्ट्रीय फल है और इसे "फलों का राजा" कहा जाता है। भारत विश्व में आम का सबसे बड़ा उत्पादक देश है। आम की खेती उत्तर प्रदेश, बिहार, आंध्र प्रदेश, तमिलनाडु, कर्नाटक और महाराष्ट्र में प्रमुखता से की जाती है।</p>
+            </div>
+
+            <div class="info-card">
+                <h3 id="historyTitle">आम का इतिहास</h3>
+                <p id="historyContent">आम की खेती का इतिहास 4000 से अधिक वर्ष पुराना है। यह दक्षिण एशिया का मूल निवासी फल है। मुगल काल में आम की खेती को विशेष प्रोत्साहन मिला। अकबर ने लाखबाग में एक लाख आम के पेड़ लगवाए थे।</p>
+            </div>
+
+            <div class="info-card">
+                <h3 id="benefitsTitle">आम की खेती के लाभ</h3>
+                <ul id="benefitsList">
+                    <li>उच्च आर्थिक लाभ - एक एकड़ में 40-50 हजार रुपये तक की आय</li>
+                    <li>लंबी आयु वाला पेड़ - 40-50 साल तक फल देता है</li>
+                    <li>कम रखरखाव की आवश्यकता</li>
+                    <li>देसी और विदेशी बाजार में उच्च मांग</li>
+                    <li>पर्यावरण के लिए लाभकारी</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Varieties Section -->
+        <div id="varieties" class="content-section">
+            <div class="info-card">
+                <h3 id="var1Title">लंगड़ा (Langra)</h3>
+                <p id="var1Content"><strong>मौसम:</strong> जुलाई-अगस्त<br>
+                <strong>विशेषता:</strong> बेहद मीठा, रेशा रहित, हरा रंग<br>
+                <strong>क्षेत्र:</strong> वाराणसी, बिहार में प्रसिद्ध</p>
+            </div>
+
+            <div class="info-card">
+                <h3 id="var2Title">दशहरी (Dasheri)</h3>
+                <p id="var2Content"><strong>मौसम:</strong> जून-जुलाई<br>
+                <strong>विशेषता:</strong> मध्यम आकार, सुगंधित, पीला रंग<br>
+                <strong>क्षेत्र:</strong> उत्तर प्रदेश में प्रमुख</p>
+            </div>
+
+            <div class="info-card">
+                <h3 id="var3Title">अल्फांसो (Alphonso)</h3>
+                <p id="var3Content"><strong>मौसम:</strong> अप्रैल-मई<br>
+                <strong>विशेषता:</strong> राजा आम, सबसे महंगा, बेहतरीन स्वाद<br>
+                <strong>क्षेत्र:</strong> रत्नागिरी, महाराष्ट्र</p>
+            </div>
+
+            <div class="info-card">
+                <h3 id="var4Title">चौसा (Chausa)</h3>
+                <p id="var4Content"><strong>मौसम:</strong> जुलाई-अगस्त<br>
+                <strong>विशेषता:</strong> बड़ा आकार, बहुत मीठा, पीला<br>
+                <strong>क्षेत्र:</strong> बिहार, उत्तर प्रदेश</p>
+            </div>
+
+            <div class="info-card">
+                <h3 id="var5Title">केसर (Kesar)</h3>
+                <p id="var5Content"><strong>मौसम:</strong> मई-जून<br>
+                <strong>विशेषता:</strong> केसर जैसी सुगंध, रसीला<br>
+                <strong>क्षेत्र:</strong> गुजरात में प्रसिद्ध</p>
+            </div>
+        </div>
+
+        <!-- Cultivation Section -->
+        <div id="cultivation" class="content-section">
+            <div class="info-card">
+                <h3 id="cult1Title">भूमि और जलवायु</h3>
+                <p id="cult1Content"><strong>भूमि:</strong> दोमट या बलुई दोमट मिट्टी सबसे उपयुक्त। मिट्टी का pH 5.5 से 7.5 होना चाहिए।<br>
+                <strong>जलवायु:</strong> उष्णकटिबंधीय और उपोष्णकटिबंधीय जलवायु। तापमान 24-27°C आदर्श।</p>
+            </div>
+
+            <div class="info-card">
+                <h3 id="cult2Title">रोपण का समय</h3>
+                <p id="cult2Content"><strong>सबसे अच्छा समय:</strong> जुलाई-अगस्त (मानसून)<br>
+                <strong>वैकल्पिक समय:</strong> फरवरी-मार्च (सिंचाई सुविधा के साथ)<br>
+                <strong>पौधों की दूरी:</strong> 10×10 मीटर (वर्गाकार विधि)</p>
+            </div>
+
+            <div class="info-card">
+                <h3 id="cult3Title">रोपण विधि</h3>
+                <ul id="cult3Content">
+                    <li>गड्ढे का आकार: 1×1×1 मीटर</li>
+                    <li>गड्ढे को 15-20 दिन पहले खोदें</li>
+                    <li>प्रति गड्ढा 20-25 किलो गोबर की खाद डालें</li>
+                    <li>200 ग्राम सुपर फास्फेट और 100 ग्राम पोटाश मिलाएं</li>
+                    <li>पौधे को गड्ढे के बीच में लगाएं</li>
+                    <li>रोपण के बाद तुरंत सिंचाई करें</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h3 id="cult4Title">खाद और उर्वरक</h3>
+                <p id="cult4Content"><strong>पहले वर्ष:</strong> 10 किलो गोबर खाद, 100 ग्राम नाइट्रोजन<br>
+                <strong>दूसरे वर्ष:</strong> 20 किलो गोबर खाद, 200 ग्राम नाइट्रोजन<br>
+                <strong>फलदार वृक्ष:</strong> 50 किलो गोबर खाद, 1 किलो नाइट्रोजन, 500 ग्राम फास्फोरस, 500 ग्राम पोटाश प्रति वर्ष</p>
+            </div>
+        </div>
+
+        <!-- Care Section -->
+        <div id="care" class="content-section">
+            <div class="info-card">
+                <h3 id="care1Title">सिंचाई प्रबंधन</h3>
+                <ul id="care1Content">
+                    <li><strong>गर्मी:</strong> हर 7-10 दिन में सिंचाई</li>
+                    <li><strong>मानसून:</strong> आवश्यकता अनुसार (कम सिंचाई)</li>
+                    <li><strong>सर्दी:</strong> हर 15-20 दिन में</li>
+                    <li><strong>फूल आने के समय:</strong> हल्की सिंचाई</li>
+                    <li><strong>फल विकास:</strong> नियमित सिंचाई आवश्यक</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h3 id="care2Title">कटाई-छंटाई</h3>
+                <p id="care2Content"><strong>समय:</strong> मई-जून (फल तोड़ने के बाद)<br>
+                <strong>विधि:</strong> सूखी, रोगग्रस्त और घनी शाखाओं को काटें। पेड़ को आकार में रखें। कटी जगह पर बोर्डो पेस्ट लगाएं।</p>
+            </div>
+
+            <div class="info-card">
+                <h3 id="care3Title">प्रमुख रोग और उपचार</h3>
+                <ul id="care3Content">
+                    <li><strong>पाउडरी मिल्ड्यू:</strong> गंधक का छिड़काव</li>
+                    <li><strong>एन्थ्रेक्नोज:</strong> कॉपर ऑक्सीक्लोराइड का उपयोग</li>
+                    <li><strong>फल मक्खी:</strong> जैविक कीटनाशक का छिड़काव</li>
+                    <li><strong>तना छेदक:</strong> प्रभावित भाग को साफ कर दवा लगाएं</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h3 id="care4Title">फूल और फल प्रबंधन</h3>
+                <p id="care4Content"><strong>फूल आना:</strong> जनवरी-फरवरी<br>
+                <strong>फल बनना:</strong> फरवरी-मार्च<br>
+                <strong>पकना:</strong> अप्रैल से अगस्त (किस्म अनुसार)<br>
+                <strong>टिप:</strong> फलों को पूर्ण पकने से पहले तोड़ें। कार्बाइड का उपयोग न करें।</p>
+            </div>
+        </div>
+
+        <!-- Selling Section -->
+        <div id="selling" class="content-section">
+            <div class="info-card">
+                <h3 id="sell1Title">फल तोड़ने का सही समय</h3>
+                <ul id="sell1Content">
+                    <li>फल पूरी तरह विकसित हो जाए लेकिन थोड़ा कच्चा हो</li>
+                    <li>डंठल के पास रेजिन (गोंद) आना बंद हो जाए</li>
+                    <li>फल का रंग गहरा हरा से हल्का हरा हो</li>
+                    <li>सुबह या शाम के समय तोड़ें</li>
+                    <li>7-8 सेमी डंठल के साथ तोड़ें</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h3 id="sell2Title">ग्रेडिंग और पैकिंग</h3>
+                <p id="sell2Content"><strong>ग्रेडिंग:</strong> आकार के अनुसार A, B, C ग्रेड<br>
+                <strong>पैकिंग:</strong> प्लास्टिक के क्रेट या लकड़ी के बक्से में। हर परत के बीच कागज या भूसा रखें।<br>
+                <strong>भंडारण:</strong> 10-12°C तापमान पर 2-4 सप्ताह तक</p>
+            </div>
+
+            <div class="info-card">
+                <h3 id="sell3Title">बिक्री के विकल्प</h3>
+                <ul id="sell3Content">
+                    <li><strong>मंडी:</strong> स्थानीय फल मंडी में बेचें</li>
+                    <li><strong>थोक व्यापारी:</strong> बड़े व्यापारियों से संपर्क करें</li>
+                    <li><strong>निर्यात:</strong> FPO के माध्यम से विदेशों में</li>
+                    <li><strong>ऑनलाइन:</strong> ई-कॉमर्स प्लेटफॉर्म पर</li>
+                    <li><strong>सीधी बिक्री:</strong> किसान बाजार या होटलों में</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h3 id="sell4Title">मूल्य निर्धारण टिप्स</h3>
+                <p id="sell4Content">• बाजार मूल्य की जानकारी रखें<br>
+                • गुणवत्ता के अनुसार मूल्य तय करें<br>
+• किस्म और मौसम का प्रभाव समझें<br>
+                • थोक में बेचने पर छूट की तैयारी रखें<br>
+                • ब्रांडिंग से बेहतर मूल्य मिलता है</p>
+            </div>
+        </div>
+
+        <!-- Quiz Section -->
+        <div id="quiz" class="content-section">
+            <div class="quiz-container">
+                <h2 id="quizTitle" style="text-align: center; color: #ff6f00; margin-bottom: 30px;">आम की खेती क्विज</h2>
+                
+                <div id="quizQuestions"></div>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="quiz-btn" onclick="submitQuiz()" id="submitBtn">उत्तर जमा करें</button>
+                    <button class="quiz-btn" onclick="resetQuiz()" id="resetBtn">फिर से शुरू करें</button>
+                </div>
+
+                <div id="resultSection"></div>
+            </div>
+        </div>
+
+        <footer>
+            <p id="footerText">🥭 आम की खेती - किसानों के लिए सम्पूर्ण मार्गदर्शिका 🥭</p>
+            <p id="footerCopy">© 2024 Mango Farming Portal. सभी अधिकार सुरक्षित।</p>
+        </footer>
+    </div>
+
+    <script>
+        let currentLang = 'hi';
+        let userAnswers = {};
+
+        const content = {
+            hi: {
+                mainTitle: '🥭 आम की खेती - किसान पोर्टल 🥭',
+                subtitle: 'आम की खेती से जुड़ी सम्पूर्ण जानकारी',
+                tab1: 'मुख्य पृष्ठ',
+                tab2: 'आम की किस्में',
+                tab3: 'खेती की विधि',
+                tab4: 'देखभाल',
+                tab5: 'बिक्री',
+                tab6: 'क्विज',
+                homeTitle: 'आम की खेती का परिचय',
+                homeContent: 'आम भारत का राष्ट्रीय फल है और इसे "फलों का राजा" कहा जाता है। भारत विश्व में आम का सबसे बड़ा उत्पादक देश है। आम की खेती उत्तर प्रदेश, बिहार, आंध्र प्रदेश, तमिलनाडु, कर्नाटक और महाराष्ट्र में प्रमुखता से की जाती है।',
+                historyTitle: 'आम का इतिहास',
+                historyContent: 'आम की खेती का इतिहास 4000 से अधिक वर्ष पुराना है। यह दक्षिण एशिया का मूल निवासी फल है। मुगल काल में आम की खेती को विशेष प्रोत्साहन मिला। अकबर ने लाखबाग में एक लाख आम के पेड़ लगवाए थे।',
+                benefitsTitle: 'आम की खेती के लाभ',
+                quizTitle: 'आम की खेती क्विज',
+                submitBtn: 'उत्तर जमा करें',
+                resetBtn: 'फिर से शुरू करें',
+                footerText: '🥭 आम की खेती - किसानों के लिए सम्पूर्ण मार्गदर्शिका 🥭',
+                footerCopy: '© 2024 Mango Farming Portal. सभी अधिकार सुरक्षित।'
+            },
+            en: {
+                mainTitle: '🥭 Mango Farming - Farmer Portal 🥭',
+                subtitle: 'Complete Information on Mango Cultivation',
+                tab1: 'Home',
+                tab2: 'Varieties',
+                tab3: 'Cultivation',
+                tab4: 'Care',
+                tab5: 'Selling',
+                tab6: 'Quiz',
+                homeTitle: 'Introduction to Mango Farming',
+                homeContent: 'Mango is the national fruit of India and is called the "King of Fruits". India is the largest producer of mangoes in the world. Mango cultivation is mainly done in Uttar Pradesh, Bihar, Andhra Pradesh, Tamil Nadu, Karnataka and Maharashtra.',
+                historyTitle: 'History of Mango',
+                historyContent: 'Mango cultivation has a history of more than 4000 years. It is native to South Asia. During the Mughal period, mango cultivation received special encouragement. Akbar planted one lakh mango trees in Lakhbagh.',
+                benefitsTitle: 'Benefits of Mango Farming',
+                quizTitle: 'Mango Farming Quiz',
+                submitBtn: 'Submit Answers',
+                resetBtn: 'Restart Quiz',
+                footerText: '🥭 Mango Farming - Complete Guide for Farmers 🥭',
+                footerCopy: '© 2024 Mango Farming Portal. All rights reserved.'
+            }
+        };
+
+        const quizData = {
+            hi: [
+                {
+                    question: 'आम के पेड़ को फल देने में कितना समय लगता है?',
+                    options: ['1-2 साल', '3-5 साल', '7-10 साल', '15 साल'],
+                    correct: 1
+                },
+                {
+                    question: 'भारत का राष्ट्रीय फल कौन सा है?',
+                    options: ['केला', 'आम', 'संतरा', 'सेब'],
+                    correct: 1
+                },
+                {
+                    question: 'आम के पौधे रोपने का सबसे अच्छा समय कौन सा है?',
+                    options: ['अप्रैल-मई', 'जुलाई-अगस्त', 'नवंबर-दिसंबर', 'जनवरी-फरवरी'],
+                    correct: 1
+                },
+                {
+                    question: 'अल्फांसो आम किस राज्य में प्रसिद्ध है?',
+                    options: ['बिहार', 'उत्तर प्रदेश', 'महाराष्ट्र', 'पंजाब'],
+                    correct: 2
+                },
+                {
+                    question: 'आम के पेड़ों के बीच कितनी दूरी होनी चाहिए?',
+                    options: ['5×5 मीटर', '10×10 मीटर', '15×15 मीटर', '20×20 मीटर'],
+                    correct: 1
+                },
+                {
+                    question: 'दशहरी आम का मौसम कब होता है?',
+                    options: ['मार्च-अप्रैल', 'जून-जुलाई', 'अगस्त-सितंबर', 'अक्टूबर-नवंबर'],
+                    correct: 1
+                },
+                {
+                    question: 'आम की खेती के लिए सबसे उपयुक्त मिट्टी कौन सी है?',
+                    options: ['काली मिट्टी', 'दोमट मिट्टी', 'लाल मिट्टी', 'पथरीली मिट्टी'],
+                    correct: 1
+                },
+                {
+                    question: 'गर्मी में आम के पेड़ को कितने दिन में सिंचाई करनी चाहिए?',
+                    options: ['हर 3-5 दिन', 'हर 7-10 दिन', 'हर 15-20 दिन', 'महीने में एक बार'],
+                    correct: 1
+                },
+                {
+                    question: 'आम को "फलों का राजा" क्यों कहा जाता है?',
+                    options: ['सबसे महंगा है', 'स्वाद और पोषण में श्रेष्ठ', 'सबसे बड़ा फल', 'केवल राजा खाते थे'],
+                    correct: 1
+                },
+                {
+                    question: 'लंगड़ा आम किस क्षेत्र में प्रसिद्ध है?',
+                    options: ['मुंबई', 'वाराणसी और बिहार', 'दिल्ली', 'जयपुर'],
+                    correct: 1
+                }
+            ],
+            en: [
+                {
+                    question: 'How long does it take for a mango tree to bear fruit?',
+                    options: ['1-2 years', '3-5 years', '7-10 years', '15 years'],
+                    correct: 1
+                },
+                {
+                    question: 'What is the national fruit of India?',
+                    options: ['Banana', 'Mango', 'Orange', 'Apple'],
+                    correct: 1
+                },
+                {
+                    question: 'What is the best time to plant mango saplings?',
+                    options: ['April-May', 'July-August', 'November-December', 'January-February'],
+                    correct: 1
+                },
+                {
+                    question: 'In which state is Alphonso mango famous?',
+                    options: ['Bihar', 'Uttar Pradesh', 'Maharashtra', 'Punjab'],
+                    correct: 2
+                },
+                {
+                    question: 'What should be the spacing between mango trees?',
+                    options: ['5×5 meters', '10×10 meters', '15×15 meters', '20×20 meters'],
+                    correct: 1
+                },
+                {
+                    question: 'When is the season for Dasheri mango?',
+                    options: ['March-April', 'June-July', 'August-September', 'October-November'],
+                    correct: 1
+                },
+                {
+                    question: 'Which soil is most suitable for mango cultivation?',
+                    options: ['Black soil', 'Loamy soil', 'Red soil', 'Rocky soil'],
+                    correct: 1
+                },
+                {
+                    question: 'How often should mango trees be irrigated in summer?',
+                    options: ['Every 3-5 days', 'Every 7-10 days', 'Every 15-20 days', 'Once a month'],
+                    correct: 1
+                },
+                {
+                    question: 'Why is mango called the "King of Fruits"?',
+                    options: ['Most expensive', 'Superior in taste and nutrition', 'Largest fruit', 'Only kings ate it'],
+                    correct: 1
+                },
+                {
+                    question: 'In which region is Langra mango famous?',
+                    options: ['Mumbai', 'Varanasi and Bihar', 'Delhi', 'Jaipur'],
+                    correct: 1
+                }
+            ]
+        };
+
+        function showSection(section) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            
+            document.getElementById(section).classList.add('active');
+            event.target.classList.add('active');
+
+            if (section === 'quiz') {
+                loadQuiz();
+            }
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'hi' ? 'en' : 'hi';
+            document.getElementById('langBtn').textContent = currentLang === 'hi' ? 'English' : 'हिंदी';
+            updateContent();
+            
+            // Reload quiz if on quiz section
+            if (document.getElementById('quiz').classList.contains('active')) {
+                loadQuiz();
+            }
+        }
+
+        function updateContent() {
+            const lang = content[currentLang];
+            document.getElementById('mainTitle').textContent = lang.mainTitle;
+            document.getElementById('subtitle').textContent = lang.subtitle;
+            document.getElementById('tab1').textContent = lang.tab1;
+            document.getElementById('tab2').textContent = lang.tab2;
+            document.getElementById('tab3').textContent = lang.tab3;
+            document.getElementById('tab4').textContent = lang.tab4;
+            document.getElementById('tab5').textContent = lang.tab5;
+            document.getElementById('tab6').textContent = lang.tab6;
+            document.getElementById('homeTitle').textContent = lang.homeTitle;
+            document.getElementById('homeContent').textContent = lang.homeContent;
+            document.getElementById('historyTitle').textContent = lang.historyTitle;
+            document.getElementById('historyContent').textContent = lang.historyContent;
+            document.getElementById('benefitsTitle').textContent = lang.benefitsTitle;
+            document.getElementById('quizTitle').textContent = lang.quizTitle;
+            document.getElementById('submitBtn').textContent = lang.submitBtn;
+            document.getElementById('resetBtn').textContent = lang.resetBtn;
+            document.getElementById('footerText').textContent = lang.footerText;
+            document.getElementById('footerCopy').textContent = lang.footerCopy;
+        }
+
+        function loadQuiz() {
+            const quizContainer = document.getElementById('quizQuestions');
+            const questions = quizData[currentLang];
+            userAnswers = {};
+            
+            let html = '';
+            questions.forEach((q, index) => {
+                html += `
+                    <div class="question-card">
+                        <h3>${currentLang === 'hi' ? 'प्रश्न' : 'Question'} ${index + 1}: ${q.question}</h3>
+                        ${q.options.map((opt, i) => `
+                            <div class="option" onclick="selectOption(${index}, ${i})">
+                                <input type="radio" name="q${index}" id="q${index}_${i}" style="margin-right: 10px;">
+                                <label for="q${index}_${i}">${opt}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            });
+            
+            quizContainer.innerHTML = html;
+            document.getElementById('resultSection').innerHTML = '';
+        }
+
+        function selectOption(qIndex, optIndex) {
+            userAnswers[qIndex] = optIndex;
+            
+            // Remove previous selection styling
+            const options = document.querySelectorAll(`input[name="q${qIndex}"]`);
+            options.forEach(opt => {
+                opt.parentElement.classList.remove('selected');
+                opt.checked = false;
+            });
+            
+            // Add selection styling
+            const selected = document.getElementById(`q${qIndex}_${optIndex}`);
+            selected.checked = true;
+            selected.parentElement.classList.add('selected');
+        }
+
+        function submitQuiz() {
+            const questions = quizData[currentLang];
+            let score = 0;
+            
+            questions.forEach((q, index) => {
+                if (userAnswers[index] === q.correct) {
+                    score++;
+                }
+            });
+            
+            const percentage = ((score / questions.length) * 100).toFixed(1);
+            let message = '';
+            
+            if (currentLang === 'hi') {
+                if (percentage >= 80) message = '🎉 बहुत बढ़िया! आप आम की खेती के विशेषज्ञ हैं!';
+                else if (percentage >= 60) message = '👍 अच्छा प्रयास! थोड़ी और मेहनत करें।';
+                else if (percentage >= 40) message = '📚 और अध्ययन की आवश्यकता है।';
+                else message = '💪 निराश न हों! फिर से कोशिश करें।';
+            } else {
+                if (percentage >= 80) message = '🎉 Excellent! You are a mango farming expert!';
+                else if (percentage >= 60) message = '👍 Good effort! Keep learning.';
+                else if (percentage >= 40) message = '📚 More study needed.';
+                else message = "💪 Don't be discouraged! Try again.";
+            }
+            
+            const resultHTML = `
+                <div class="result-card">
+                    <h2>${currentLang === 'hi' ? 'आपका परिणाम' : 'Your Result'}</h2>
+                    <div class="score">${score}/${questions.length}</div>
+                    <p style="font-size: 1.3em; margin: 15px 0;">${percentage}%</p>
+                    <p style="font-size: 1.2em; color: #ff6f00; font-weight: bold;">${message}</p>
+                    <p style="margin-top: 20px; font-size: 1.1em;">
+                        ${currentLang === 'hi' ? 'सही उत्तर' : 'Correct Answers'}: <strong style="color: #28a745;">${score}</strong><br>
+                        ${currentLang === 'hi' ? 'गलत उत्तर' : 'Wrong Answers'}: <strong style="color: #dc3545;">${questions.length - score}</strong>
+                    </p>
+                </div>
+            `;
+            
+            document.getElementById('resultSection').innerHTML = resultHTML;
+            
+            // Scroll to result
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function resetQuiz() {
+            loadQuiz();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Initialize
+        window.onload = function() {
+            updateContent();
+        };
+    </script>
+</body>
+</html>

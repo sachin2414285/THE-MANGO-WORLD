@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MANGO WORLD</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            overflow: hidden; 
+            background: #000; 
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: 
+                linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)),
+                url('https://images.unsplash.com/photo-1596591609-9d0d6e6d8c5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') center/cover no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1.2s ease;
+        }
+
+        .loading-screen.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* MANGO TREE & FRUITS FLOATING */
+        .mango-tree {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 600px;
+            opacity: 0.9;
+            animation: treeSway 6s ease-in-out infinite;
+            filter: drop-shadow(0 10px 30px rgba(0,0,0,0.3));
+        }
+
+        .floating-mango {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: url('https://images.unsplash.com/photo-1564490482043-5e0a7d2c5e6e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80') center/cover;
+            border-radius: 50%;
+            box-shadow: 0 8px 20px rgba(255, 179, 0, 0.6);
+            animation: floatMango 4s ease-in-out infinite;
+        }
+
+        .floating-mango:nth-child(1) { top: 20%; left: 15%; animation-delay: 0s; }
+        .floating-mango:nth-child(2) { top: 30%; right: 10%; animation-delay: 1s; }
+        .floating-mango:nth-child(3) { bottom: 35%; left: 20%; animation-delay: 2s; }
+        .floating-mango:nth-child(4) { bottom: 25%; right: 18%; animation-delay: 1.5s; }
+
+        .loading-logo {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            margin-bottom: 40px;
+            z-index: 10;
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+
+        .logo-icon {
+            font-size: 5.8rem;
+            background: linear-gradient(45deg, #ffb300, #ff8c00, #ff6d00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: iconGlow 2s ease-in-out infinite alternate;
+            filter: drop-shadow(0 0 15px rgba(255,179,0,0.7));
+        }
+        
+        .logo-text {
+            font-size: 4.5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #ffffff, #ffb300, #ff8c00);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textShimmer 3s ease-in-out infinite;
+            letter-spacing: 2.5px;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        .loading-bar-container {
+            width: 340px;
+            height: 12px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 28px;
+            box-shadow: 0 0 25px rgba(255,179,0,0.4);
+            z-index: 10;
+        }
+
+        .loading-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ffb300, #ff8c00, #ff6d00);
+            width: 0%;
+            animation: loadingProgress 3.8s ease-out forwards;
+            box-shadow: 0 0 30px #ffb300, 0 0 50px #ff8c00;
+        }
+
+        .loading-text {
+            color: #fff;
+            font-size: 1.35rem;
+            font-weight: 600;
+            animation: pulse 2s ease-in-out infinite;
+            letter-spacing: 1.2px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+
+        /* ANIMATIONS */
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes iconGlow {
+            0% { filter: drop-shadow(0 0 8px #ffb300); }
+            100% { filter: drop-shadow(0 0 25px #ffb300) drop-shadow(0 0 40px #ff8c00); }
+        }
+
+        @keyframes textShimmer {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes loadingProgress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes treeSway {
+            0%, 100% { transform: translateX(-50%) rotate(0deg); }
+            50% { transform: translateX(-48%) rotate(1deg); }
+        }
+
+        @keyframes floatMango {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-25px) rotate(10deg); }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .loading-logo { flex-direction: column; gap: 15px; }
+            .logo-icon { font-size: 4rem; }
+            .logo-text { font-size: 3rem; }
+            .loading-bar-container { width: 280px; }
+            .loading-text { font-size: 1.1rem; }
+            .mango-tree { width: 90%; }
+            .floating-mango { width: 45px; height: 45px; }
+        }
+
+        @media (max-width: 480px) {
+            .logo-icon { font-size: 3.5rem; }
+            .logo-text { font-size: 2.6rem; }
+            .loading-bar-container { width: 240px; }
+            .mango-tree { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- MANGO FARM LOADING SCREEN -->
+    <div class="loading-screen" id="loadingScreen">
+
+        <!-- Floating Mango Fruits -->
+        <div class="floating-mango"></div>
+        <div class="floating-mango"></div>
+        <div class="floating-mango"></div>
+        <div class="floating-mango"></div>
+        <img src="https://images.unsplash.com/photo-1596591609-9d0d6e6d8c5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+             alt="Mango Tree" class="mango-tree">
+
+       
+        <div class="loading-logo">
+            <div class="logo-text">THE MANGO WORLD</div>
+        </div>
+
+        <div class="loading-bar-container">
+            <div class="loading-bar"></div>
+        </div>
+
+        <div class="loading-text">आम की दुनिया में आपका स्वागत है...</div>
+    </div>
+
+    <script>
+        setTimeout(() => {
+            document.getElementById('loadingScreen').classList.add('fade-out');
+            setTimeout(() => {
+               
+                window.location.href = 'frontpage.html';
+            }, 1200);
+        }, 4000); 
+    </script>
+
+</body>
+</html>

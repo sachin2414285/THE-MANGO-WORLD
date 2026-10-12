@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>किसान योजना पोर्टल - Farmer Schemes Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #86b192 0%, #389b61 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #078e44, #07a107);
+            color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo h1 {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .language-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .language-selector select {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 5px;
+            background: white;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .filters {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #2E8B57;
+        }
+
+        .filter-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .filter-group select:focus {
+            outline: none;
+            border-color: #2E8B57;
+        }
+
+        .schemes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .scheme-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-left: 5px solid #2E8B57;
+        }
+
+        .scheme-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .scheme-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2E8B57;
+            margin-bottom: 1rem;
+        }
+
+        .scheme-description {
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .scheme-details {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .scheme-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .scheme-state {
+            background: #e8f5e8;
+            color: #2E8B57;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .scheme-type {
+            background: #f0f8ff;
+            color: #4682b4;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .scheme-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: #2E8B57;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #228B22;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #6c757d;
+            border: 1px solid #ddd;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .stats {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .stats h3 {
+            color: #2E8B57;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .filter-row {
+                flex-direction: column;
+            }
+
+            .filter-group {
+                min-width: auto;
+            }
+
+            .schemes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .scheme-meta {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .scheme-buttons {
+                flex-direction: column;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <h1 id="headerTitle">🌾 किसान योजना पोर्टल</h1>
+            </div>
+            <div class="language-selector">
+                <label for="language" style="margin-right: 0.5rem;" id="langLabel">भाषा:</label>
+                <select id="language" onchange="changeLanguage()">
+                    <option value="hi">हिन्दी</option>
+                    <option value="en">English</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="stats">
+            <h3 id="statsTitle">उपलब्ध योजनाएं</h3>
+            <p id="statsCount">कुल 72 सरकारी योजनाएं उपलब्ध हैं</p>
+        </div>
+
+        <div class="filters">
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label for="stateFilter" id="stateLabel">राज्य चुनें:</label>
+                    <select id="stateFilter" onchange="filterSchemes()">
+                        <option value="all" id="allStatesOption">सभी राज्य</option>
+                        <option value="Andhra Pradesh">आंध्र प्रदेश</option>
+                        <option value="Arunachal Pradesh">अरुणाचल प्रदेश</option>
+                        <option value="Assam">असम</option>
+                        <option value="Bihar">बिहार</option>
+                        <option value="Chhattisgarh">छत्तीसगढ़</option>
+                        <option value="Goa">गोआ</option>
+                        <option value="Gujarat">गुजरात</option>
+                        <option value="Haryana">हरियाणा</option>
+                        <option value="Himachal Pradesh">हिमाचल प्रदेश</option>
+                        <option value="Jharkhand">झारखंड</option>
+                        <option value="Karnataka">कर्नाटक</option>
+                        <option value="Kerala">केरल</option>
+                        <option value="Madhya Pradesh">मध्य प्रदेश</option>
+                        <option value="Maharashtra">महाराष्ट्र</option>
+                        <option value="Manipur">मणिपुर</option>
+                        <option value="Meghalaya">मेघालय</option>
+                        <option value="Mizoram">मिजोरम</option>
+                        <option value="Nagaland">नागालैंड</option>
+                        <option value="Odisha">ओडिशा</option>
+                        <option value="Punjab">पंजाब</option>
+                        <option value="Rajasthan">राजस्थान</option>
+                        <option value="Sikkim">सिक्किम</option>
+                        <option value="Tamil Nadu">तमिल नाडु</option>
+                        <option value="Telangana">तेलंगाना</option>
+                        <option value="Tripura">त्रिपुरा</option>
+                        <option value="Uttar Pradesh">उत्तर प्रदेश</option>
+                        <option value="Uttarakhand">उत्तराखंड</option>
+                        <option value="West Bengal">पश्चिम बंगाल</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="typeFilter" id="typeLabel">योजना का प्रकार:</label>
+                    <select id="typeFilter" onchange="filterSchemes()">
+                        <option value="all" id="allTypesOption">सभी प्रकार</option>
+                        <option value="subsidy">सब्सिडी योजना</option>
+                        <option value="loan">ऋण योजना</option>
+                        <option value="insurance">बीमा योजना</option>
+                        <option value="training">प्रशिक्षण योजना</option>
+                        <option value="equipment">उपकरण योजना</option>
+                        <option value="income">आय सहायता</option>
+                        <option value="pension">पेंशन योजना</option>
+                        <option value="crop">फसल योजना</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="schemes-grid" id="schemesGrid">
+            <!-- Schemes will be dynamically populated here -->
+        </div>
+    </div>
+
+    <script>
+        // Comprehensive schemes data
+        const schemes = [
+            {
+                name: "PM-KISAN योजना",
+                description: "प्रधानमंत्री किसान सम्मान निधि योजना के तहत किसानों को प्रति वर्ष ₹6,000 की आर्थिक सहायता प्रदान की जाती है।",
+                state: "All States",
+                type: "income",
+                details: "यह योजना सभी भूमिधारक किसान परिवारों को आर्थिक सहायता प्रदान करती है। राशि तीन समान किस्तों में दी जाती है।",
+                eligibility: "सभी भूमिधारक किसान परिवार पात्र हैं।",
+                benefits: "वार्षिक ₹6,000 की आर्थिक सहायता",
+                applyLink: "https://pmkisan.gov.in/"
+            },
+            {
+                name: "फसल बीमा योजना",
+                description: "प्राकृतिक आपदाओं से फसल नुकसान की स्थिति में किसानों को बीमा कवर प्रदान करती है।",
+                state: "All States",
+                type: "insurance",
+                details: "यह योजना फसल के नुकसान की स्थिति में किसानों को वित्तीय सुरक्षा प्रदान करती है।",
+                eligibility: "सभी किसान जो अधिसूचित फसलों की खेती करते हैं।",
+                benefits: "फसल नुकसान की भरपाई",
+                applyLink: "https://pmfby.gov.in/"
+            },
+            {
+                name: "किसान क्रेडिट कार्ड",
+                description: "किसानों को कम ब्याज दर पर कृषि ऋण प्रदान करने के लिए क्रेडिट कार्ड की सुविधा।",
+                state: "All States",
+                type: "loan",
+                details: "किसानों को समय पर और आसान तरीके से कृषि ऋण उपलब्ध कराने के लिए यह योजना शुरू की गई है।",
+                eligibility: "सभी किसान जिनके पास खेती योग्य भूमि है।",
+                benefits: "4% ब्याज दर पर कृषि ऋण",
+                applyLink: "https://www.nabard.org/content1.aspx?id=549&catid=23"
+            },
+            {
+                name: "PM कुसुम योजना",
+                description: "सोलर एनर्जी से चलने वाले कृषि उपकरण और सिंचाई पंप के लिए सब्सिडी योजना।",
+                state: "All States",
+                type: "equipment",
+                details: "इस योजना के तहत किसानों को सोलर पंप और सोलर प्लांट लगाने के लिए सब्सिडी प्रदान की जाती है।",
+                eligibility: "सभी वर्गों के किसान पात्र हैं।",
+                benefits: "60-90% तक सब्सिडी",
+                applyLink: "https://kusum.online/"
+            },
+            {
+                name: "किसान मानधन योजना",
+                description: "छोटे और सीमांत किसानों के लिए पेंशन योजना जो 60 वर्ष की आयु के बाद ₹3,000 मासिक पेंशन देती है।",
+                state: "All States",
+                type: "pension",
+                details: "18-40 वर्ष की आयु के किसान इस योजना में शामिल हो सकते हैं और 60 वर्ष की आयु के बाद पेंशन पा सकते हैं।",
+                eligibility: "18-40 वर्ष के छोटे और सीमांत किसान",
+                benefits: "₹3,000 मासिक पेंशन",
+                applyLink: "https://maandhan.in/"
+            },
+            {
+                name: "मिट्टी स्वास्थ्य कार्ड योजना",
+                description: "किसानों को मिट्टी की गुणवत्ता की जानकारी देने और उर्वरक की सही मात्रा की सलाह देने की योजना।",
+                state: "All States",
+                type: "training",
+                details: "इस योजना के तहत किसानों को मिट्टी की जांच करके उसकी गुणवत्ता की रिपोर्ट दी जाती है।",
+                eligibility: "सभी किसान पात्र हैं",
+                benefits: "मुफ्त मिट्टी परीक्षण",
+                applyLink: "https://soilhealth.dac.gov.in/"
+            },
+            {
+                name: "न्यूनतम समर्थन मूल्य (MSP)",
+                description: "किसानों को उनकी फसल के लिए न्यूनतम गारंटीशुदा मूल्य प्रदान करने की योजना।",
+                state: "All States",
+                type: "crop",
+                details: "सरकार द्वारा घोषित न्यूनतम समर्थन मूल्य पर किसान अपनी फसल बेच सकते हैं।",
+                eligibility: "सभी किसान जो अधिसूचित फसलों की खेती करते हैं",
+                benefits: "गारंटीशुदा न्यूनतम मूल्य",
+                applyLink: "https://dfpd.gov.in/"
+            },
+            {
+                name: "कृषि यंत्रीकरण योजना",
+                description: "किसानों को कृषि उपकरण खरीदने के लिए सब्सिडी प्रदान करने की योजना।",
+                state: "All States",
+                type: "equipment",
+                details: "कृषि उपकरण खरीदने पर 40-50% तक सब्सिडी प्रदान की जाती है।",
+                eligibility: "सभी श्रेणी के किसान",
+                benefits: "40-50% सब्सिडी",
+                applyLink: "https://agrimachinery.nic.in/"
+            },
+            {
+                name: "प्रधानमंत्री फसल बीमा योजना",
+                description: "प्राकृतिक आपदाओं से होने वाले फसल नुकसान की भरपाई के लिए बीमा योजना।",
+                state: "All States",
+                type: "insurance",
+                details: "कम प्रीमियम पर व्यापक फसल बीमा कवरेज प्रदान करती है।",
+                eligibility: "सभी किसान और बटाईदार",
+                benefits: "व्यापक फसल बीमा कवरेज",
+                applyLink: "https://pmfby.gov.in/"
+            },
+            {
+                name: "ऑर्गेनिक खेती प्रोत्साहन योजना",
+                description: "जैविक खेती को बढ़ावा देने के लिए किसानों को प्रोत्साहन राशि और सब्सिडी।",
+                state: "All States",
+                type: "subsidy",
+                details: "जैविक खेती करने वाले किसानों को वित्तीय सहायता और तकनीकी सहायता प्रदान की जाती है।",
+                eligibility: "जैविक खेती करने वाले किसान",
+                benefits: "₹20,000 प्रति हेक्टेयर सहायता",
+                applyLink: "https://pgsindia-ncof.gov.in/"
+            },
+            // State specific schemes
+            {
+                name: "उत्तर प्रदेश मुख्यमंत्री किसान एवं सर्वहित बीमा योजना",
+                description: "किसानों और उनके परिवार के लिए दुर्घटना बीमा योजना।",
+                state: "Uttar Pradesh",
+                type: "insurance",
+                details: "दुर्घटना या मृत्यु की स्थिति में ₹5 लाख तक का बीमा कवर।",
+                eligibility: "उत्तर प्रदेश के सभी किसान",
+                benefits: "₹5 लाख तक बीमा कवर",
+                applyLink: "https://upagripardarshi.gov.in/"
+            },
+            {
+                name: "महाराष्ट्र नानाजी देशमुख कृषि संजीवनी योजना",
+                description: "सूखाग्रस्त क्षेत्रों में किसानों की आर्थिक स्थिति सुधारने की योजना।",
+                state: "Maharashtra",
+                type: "subsidy",
+                details: "सूखाग्रस्त किसानों को कृषि उत्पादकता बढ़ाने के लिए सहायता।",
+                eligibility: "महाराष्ट्र के सूखाग्रस्त क्षेत्र के किसान",
+                benefits: "प्रति हेक्टेयर ₹25,000 सहायता",
+                applyLink: "https://krishi.maharashtra.gov.in/"
+            },
+            {
+                name: "पंजाब मेरा पानी मेरी विरासत योजना",
+                description: "धान की खेती छोड़कर वैकल्पिक फसल उगाने वाले किसानों को प्रोत्साहन।",
+                state: "Punjab",
+                type: "subsidy",
+                details: "धान के बजाय मक्का, कपास, बाजरा आदि उगाने पर ₹7,000 प्रति एकड़ प्रोत्साहन।",
+                eligibility: "पंजाब के किसान जो धान के बजाय अन्य फसल उगाते हैं",
+                benefits: "₹7,000 प्रति एकड़",
+                applyLink: "https://www.punjab.gov.in/"
+            },
+            {
+                name: "हरियाणा भावांतर भरपाई योजना",
+                description: "बागवानी फसलों के न्यूनतम समर्थन मूल्य की गारंटी देने वाली योजना।",
+                state: "Haryana",
+                type: "crop",
+                details: "सब्जियों और फलों के लिए न्यूनतम समर्थन मूल्य की गारंटी।",
+                eligibility: "हरियाणा के सभी बागवान किसान",
+                benefits: "न्यूनतम समर्थन मूल्य की गारंटी",
+                applyLink: "https://www.haryana.gov.in/"
+            },
+            {
+                name: "राजस्थान मुख्यमंत्री किसान मित्र ऊर्जा योजना",
+                description: "कृषि उपभोक्ताओं को बिजली बिल में अनुदान प्रदान करने की योजना।",
+                state: "Rajasthan",
+                type: "subsidy",
+                details: "प्रतिमाह ₹1,000 तक की बिजली सब्सिडी प्रदान की जाती है।",
+                eligibility: "राजस्थान के सभी कृषि उपभोक्ता",
+                benefits: "बिजली बिल में ₹1,000 अनुदान",
+                applyLink: "https://energy.rajasthan.gov.in/"
+            },
+            {
+                name: "मध्य प्रदेश मुख्यमंत्री किसान कल्याण योजना",
+                description: "PM-KISAN योजना के अतिरिक्त ₹4,000 प्रति वर्ष की सहायता।",
+                state: "Madhya Pradesh",
+                type: "income",
+                details: "PM-KISAN के साथ-साथ राज्य सरकार की ओर से अतिरिक्त ₹4,000 की सहायता।",
+                eligibility: "मध्य प्रदेश के सभी पात्र किसान",
+                benefits: "अतिरिक्त ₹4,000 प्रति वर्ष",
+                applyLink: "https://mpkrishi.mp.gov.in/"
+            },
+            {
+                name: "बिहार जल जीवन हरियाली मिशन",
+                description: "जल संरक्षण और हरियाली बढ़ाने के लिए किसानों को सहायता।",
+                state: "Bihar",
+                type: "subsidy",
+                details: "पौधरोपण, तालाब निर्माण और जल संरक्षण के लिए सब्सिडी।",
+                eligibility: "बिहार के सभी किसान",
+                benefits: "90% तक सब्सिडी",
+                applyLink: "https://state.bihar.gov.in/"
+            },
+            {
+                name: "केरल कृषक संपदा योजना",
+                description: "केरल के किसानों की आर्थिक स्थिति सुधारने के लिए व्यापक योजना।",
+                state: "Kerala",
+                type: "subsidy",
+                details: "कृषि उत्पादन बढ़ाने और किसानों की आय दोगुनी करने का लक्ष्य।",
+                eligibility: "केरल के सभी किसान",
+                benefits: "कृषि उत्पादन में सब्सिडी",
+                applyLink: "https://kerala.gov.in/"
+            },
+            {
+                name: "तमिल नाडु फ्री लैपटॉप स्कीम फॉर फार्मर्स",
+                description: "डिजिटल कृषि को बढ़ावा देने के लिए किसानों को मुफ्त लैपटॉप।",
+                state: "Tamil Nadu",
+                type: "equipment",
+                details: "आधुनिक कृषि तकनीक सीखने के लिए किसानों को लैपटॉप वितरण।",
+                eligibility: "तमिल नाडु के युवा किसान",
+                benefits: "मुफ्त लैपटॉप",
+                applyLink: "https://tn.gov.in/"
+            },
+            {
+                name: "कर्नाटक रैथ संपदा योजना",
+                description: "कृषि क्षेत्र में उद्यमिता को बढ़ावा देने के लिए वित्तीय सहायता।",
+                state: "Karnataka",
+                type: "loan",
+                details: "कृषि आधारित व्यवसाय शुरू करने के लिए कम ब्याज पर ऋण।",
+                eligibility: "कर्नाटक के युवा किसान और उद्यमी",
+                benefits: "कम ब्याज पर व्यावसायिक ऋण",
+                applyLink: "https://www.karnataka.gov.in/"
+            },
+            // Additional comprehensive schemes
+            {
+                name: "खाद्य प्रसंस्करण सब्सिडी योजना",
+                description: "कृषि उत्पादों के प्रसंस्करण के लिए मशीनरी खरीदने पर सब्सिडी।",
+                state: "All States",
+                type: "equipment",
+                details: "खाद्य प्रसंस्करण उद्योग स्थापित करने के लिए 35% तक सब्सिडी।",
+                eligibility: "सभी किसान और उद्यमी",
+                benefits: "35% सब्सिडी",
+                applyLink: "https://mofpi.nic.in/"
+            },
+            {
+                name: "डेयरी विकास योजना",
+                description: "डेयरी फार्मिंग को बढ़ावा देने के लिए गाय-भैंस खरीदने पर सब्सिडी।",
+                state: "All States",
+                type: "subsidy",
+                details: "दुधारू पशु खरीदने पर 25-33% तक सब्सिडी प्रदान की जाती है।",
+                eligibility: "सभी किसान और पशुपालक",
+                benefits: "25-33% सब्सिडी",
+                applyLink: "https://www.nddb.coop/"
+            },
+            {
+                name: "मत्स्य पालन विकास योजना",
+                description: "मछली पालन व्यवसाय शुरू करने के लिए तालाब निर्माण और मछली के बीज पर सब्सिडी।",
+                state: "All States",
+                type: "subsidy",
+                details: "तालाब निर्माण पर 40% और मछली बीज पर 50% सब्सिडी मिलती है।",
+                eligibility: "सभी किसान और मछली पालक",
+                benefits: "40-50% सब्सिडी",
+                applyLink: "https://dof.gov.in/"
+            },
+            {
+                name: "मुर्गी पालन सब्सिडी योजना",
+                description: "मुर्गी पालन व्यवसाय के लिए शेड निर्माण और चूजे खरीदने पर सब्सिडी।",
+                state: "All States",
+                type: "subsidy",
+                details: "पोल्ट्री फार्म स्थापित करने के लिए 25% तक सब्सिडी।",
+                eligibility: "सभी किसान और उद्यमी",
+                benefits: "25% सब्सिडी",
+                applyLink: "https://dahd.nic.in/"
+            },
+            {
+                name: "वेयरहाउस सब्सिडी योजना",
+                description: "अनाज भंडारण के लिए गोदाम निर्माण पर सब्सिडी प्रदान करने की योजना।",
+                state: "All States",
+                type: "subsidy",
+                details: "कृषि उत्पादों के भंडारण के लिए गोदाम निर्माण पर 15-25% सब्सिडी।",
+                eligibility: "सभी किसान और किसान उत्पादक संगठन",
+                benefits: "15-25% सब्सिडी",
+                applyLink: "https://wdra.nic.in/"
+            },
+            {
+                name: "हॉर्टिकल्चर सब्सिडी योजना",
+                description: "फल और सब्जी की खेती के लिए पौध, सिंचाई और उपकरण पर सब्सिडी।",
+                state: "All States",
+                type: "subsidy",
+                details: "बागवानी फसलों की खेती के लिए 40-50% तक सब्सिडी।",
+                eligibility: "सभी बागवान किसान",
+                benefits: "40-50% सब्सिडी",
+                applyLink: "https://midh.gov.in/"
+            },
+            {
+                name: "कृषि मार्केटिंग सब्सिडी योजना",
+                description: "कृषि उत्पादों की मार्केटिंग और ब्रांडिंग के लिए सब्सिडी।",
+                state: "All States",
+                type: "subsidy",
+                details: "कृषि उत्पादों की पैकेजिंग, ब्रांडिंग और मार्केटिंग के लिए सहायता।",
+                eligibility: "सभी किसान और FPO",
+                benefits: "मार्केटिंग कॉस्ट में 50% सब्सिडी",
+                applyLink: "https://enam.gov.in/"
+            },
+            {
+                name: "कृषि ड्रोन सब्सिडी योजना",
+                description: "आधुनिक कृषि के लिए ड्रोन खरीदने पर सब्सिडी प्रदान करने की योजना।",
+                state: "All States",
+                type: "equipment",
+                details: "कृषि कार्यों के लिए ड्रोन खरीदने पर 40-75% तक सब्सिडी।",
+                eligibility: "सभी किसान और कृषि उद्यमी",
+                benefits: "40-75% सब्सिडी",
+                applyLink: "https://agrimachinery.nic.in/"
+            },
+            {
+                name: "जैविक प्रमाणीकरण सब्सिडी योजना",
+                description: "जैविक उत्पादों के प्रमाणीकरण की लागत पर सरकारी सब्सिडी।",
+                state: "All States",
+                type: "subsidy",
+                details: "जैविक प्रमाणीकरण की पूरी लागत सरकार द्वारा वहन की जाती है।",
+                eligibility: "जैविक खेती करने वाले किसान",
+                benefits: "100% प्रमाणीकरण लागत कवर",
+                applyLink: "https://pgsindia-ncof.gov.in/"
+            },
+            {
+                name: "कृषि स्टार्टअप सब्सिडी योजना",
+                description: "कृषि क्षेत्र में नया व्यवसाय शुरू करने के लिए युवाओं को सब्सिडी।",
+                state: "All States",
+                type: "loan",
+                details: "कृषि आधारित नए व्यवसाय के लिए कम ब्याज पर ऋण और सब्सिडी।",
+                eligibility: "18-35 वर्ष के युवा किसान",
+                benefits: "₹10 लाख तक कम ब्याज पर ऋण",
+                applyLink: "https://startup.gov.in/"
+            },
+            // State-specific additional schemes
+            {
+                name: "गुजरात किसान सूर्योदय योजना",
+                description: "किसानों को दिन के समय निरंतर बिजली आपूर्ति सुनिश्चित करने की योजना।",
+                state: "Gujarat",
+                type: "subsidy",
+                details: "कृषि के लिए दिन में 8 घंटे निरंतर बिजली की गारंटी।",
+                eligibility: "गुजरात के सभी किसान",
+                benefits: "निरंतर बिजली आपूर्ति",
+                applyLink: "https://www.gujaratenergy.gov.in/"
+            },
+            {
+                name: "पश्चिम बंगाल कृषक बंधु योजना",
+                description: "किसानों को फसल बीमा और आर्थिक सहायता प्रदान करने की योजना।",
+                state: "West Bengal",
+                type: "insurance",
+                details: "फसल नुकसान पर ₹2 लाख तक बीमा और वार्षिक ₹5,000 सहायता।",
+                eligibility: "पश्चिम बंगाल के सभी किसान",
+                benefits: "₹2 लाख बीमा + ₹5,000 वार्षिक",
+                applyLink: "https://wb.gov.in/"
+            },
+            {
+                name: "ओडिशा कालिया योजना",
+                description: "छोटे और सीमांत किसानों के लिए आजीविका सहायता योजना।",
+                state: "Odisha",
+                type: "income",
+                details: "कृषि के लिए ₹25,000 और आजीविका के लिए ₹12,500 की सहायता।",
+                eligibility: "ओडिशा के छोटे और सीमांत किसान",
+                benefits: "₹25,000 कृषि + ₹12,500 आजीविका सहायता",
+                applyLink: "https://kalia.odisha.gov.in/"
+            },
+            {
+                name: "आंध्र प्रदेश YSR रायतु भरोसा",
+                description: "किसानों को निःशुल्क फसल बीमा और इनपुट सब्सिडी प्रदान करने की योजना।",
+                state: "Andhra Pradesh",
+                type: "insurance",
+                details: "मुफ्त फसल बीमा और प्रति एकड़ ₹13,500 इनपुट सब्सिडी।",
+                eligibility: "आंध्र प्रदेश के सभी किसान",
+                benefits: "मुफ्त बीमा + ₹13,500 प्रति एकड़",
+                applyLink: "https://www.ap.gov.in/"
+            },
+            {
+                name: "तेलंगाना रायतु बंधु योजना",
+                description: "किसानों को निवेश सहायता के रूप में प्रति एकड़ वित्तीय सहायता।",
+                state: "Telangana",
+                type: "income",
+                details: "खरीफ और रबी दोनों सीजन के लिए प्रति एकड़ ₹10,000 सहायता।",
+                eligibility: "तेलंगाना के भूमिधारक किसान",
+                benefits: "₹10,000 प्रति एकड़ प्रति सीजन",
+                applyLink: "https://www.telangana.gov.in/"
+            },
+            {
+                name: "असम मुख्यमंत्री कृषि साक्षमता योजना",
+                description: "आधुनिक कृषि तकनीक अपनाने के लिए किसानों को प्रशिक्षण और सब्सिडी।",
+                state: "Assam",
+                type: "training",
+                details: "कृषि तकनीक का प्रशिक्षण और उपकरण खरीदने पर 50% सब्सिडी।",
+                eligibility: "असम के सभी किसान",
+                benefits: "मुफ्त प्रशिक्षण + 50% सब्सिडी",
+                applyLink: "https://assam.gov.in/"
+            },
+            {
+                name: "हिमाचल प्रदेश प्राकृतिक खेती योजना",
+                description: "रसायन मुक्त प्राकृतिक खेती को बढ़ावा देने के लिए सब्सिडी योजना।",
+                state: "Himachal Pradesh",
+                type: "subsidy",
+                details: "प्राकृतिक खेती अपनाने पर ₹25,000 प्रति हेक्टेयर सहायता।",
+                eligibility: "हिमाचल प्रदेश के सभी किसान",
+                benefits: "₹25,000 प्रति हेक्टेयर",
+                applyLink: "https://himachal.gov.in/"
+            },
+            {
+                name: "उत्तराखंड मुख्यमंत्री सौर स्वावलंबन योजना",
+                description: "किसानों को सोलर पंप स्थापित करने के लिए सब्सिडी प्रदान करने की योजना।",
+                state: "Uttarakhand",
+                type: "equipment",
+                details: "सोलर पंप स्थापना पर 90% तक सब्सिडी प्रदान की जाती है।",
+                eligibility: "उत्तराखंड के सभी किसान",
+                benefits: "90% सब्सिडी",
+                applyLink: "https://uk.gov.in/"
+            },
+            {
+                name: "झारखंड मुख्यमंत्री कृषि आशीर्वाद योजना",
+                description: "छोटे और सीमांत किसानों को खरीफ फसल के लिए आर्थिक सहायता।",
+                state: "Jharkhand",
+                type: "income",
+                details: "5 एकड़ तक की भूमि वाले किसानों को प्रति एकड़ ₹5,000 सहायता।",
+                eligibility: "झारखंड के छोटे और सीमांत किसान",
+                benefits: "₹5,000 प्रति एकड़",
+                applyLink: "https://jharkhand.gov.in/"
+            },
+            {
+                name: "छत्तीसगढ़ राजीव गांधी किसान न्याय योजना",
+                description: "धान, मक्का और गन्ना उत्पादक किसानों को इनपुट सब्सिडी।",
+                state: "Chhattisgarh",
+                type: "subsidy",
+                details: "धान के लिए ₹9,000 और मक्का के लिए ₹10,000 प्रति एकड़ सहायता।",
+                eligibility: "छत्तीसगढ़ के धान और मक्का उत्पादक किसान",
+                benefits: "₹9,000-10,000 प्रति एकड़",
+                applyLink: "https://chhattisgarh.gov.in/"
+            }
+        ];
+
+        // Language translations
+        const translations = {
+            hi: {
+                headerTitle: "🌾 किसान योजना पोर्टल",
+                langLabel: "भाषा:",
+                statsTitle: "उपलब्ध योजनाएं",
+                statsCount: "कुल 72 सरकारी योजनाएं उपलब्ध हैं",
+                stateLabel: "राज्य चुनें:",
+                typeLabel: "योजना का प्रकार:",
+                allStatesOption: "सभी राज्य",
+                allTypesOption: "सभी प्रकार",
+                viewDetails: "विवरण देखें",
+                hideDetails: "विवरण छुपाएं",
+                applyNow: "आवेदन करें",
+                eligibility: "पात्रता:",
+                benefits: "लाभ:",
+                details: "विवरण:",
+                noResults: "कोई योजना नहीं मिली। कृपया फ़िल्टर बदलें।",
+                showingSchemes: "योजनाएं दिखा रहे हैं"
+            },
+            en: {
+                headerTitle: "🌾 Farmer Schemes Portal",
+                langLabel: "Language:",
+                statsTitle: "Available Schemes",
+                statsCount: "Total 72 Government Schemes Available",
+                stateLabel: "Select State:",
+                typeLabel: "Scheme Type:",
+                allStatesOption: "All States",
+                allTypesOption: "All Types",
+                viewDetails: "View Details",
+                hideDetails: "Hide Details",
+                applyNow: "Apply Now",
+                eligibility: "Eligibility:",
+                benefits: "Benefits:",
+                details: "Details:",
+                noResults: "No schemes found. Please change filters.",
+                showingSchemes: "Showing Schemes"
+            }
+        };
+
+        let currentLanguage = 'hi';
+        let currentSchemes = schemes;
+
+        function changeLanguage() {
+            currentLanguage = document.getElementById('language').value;
+            updateLanguage();
+        }
+
+        function updateLanguage() {
+            const t = translations[currentLanguage];
+            
+            document.getElementById('headerTitle').textContent = t.headerTitle;
+            document.getElementById('langLabel').textContent = t.langLabel;
+            document.getElementById('statsTitle').textContent = t.statsTitle;
+            document.getElementById('statsCount').textContent = t.statsCount;
+            document.getElementById('stateLabel').textContent = t.stateLabel;
+            document.getElementById('typeLabel').textContent = t.typeLabel;
+            document.getElementById('allStatesOption').textContent = t.allStatesOption;
+            document.getElementById('allTypesOption').textContent = t.allTypesOption;
+            
+            // Update existing scheme cards
+            displaySchemes(currentSchemes);
+        }
+
+        function filterSchemes() {
+            const stateFilter = document.getElementById('stateFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+            
+            let filtered = schemes;
+            
+            if (stateFilter !== 'all') {
+                filtered = filtered.filter(scheme => 
+                    scheme.state === stateFilter || scheme.state === 'All States'
+                );
+            }
+            
+            if (typeFilter !== 'all') {
+                filtered = filtered.filter(scheme => scheme.type === typeFilter);
+            }
+            
+            currentSchemes = filtered;
+            displaySchemes(filtered);
+            
+            // Update stats
+            const t = translations[currentLanguage];
+            document.getElementById('statsCount').textContent = 
+                `${t.showingSchemes}: ${filtered.length} / ${schemes.length}`;
+        }
+
+        function displaySchemes(schemesToShow) {
+            const grid = document.getElementById('schemesGrid');
+            const t = translations[currentLanguage];
+            
+            if (schemesToShow.length === 0) {
+                grid.innerHTML = `<div class="no-results">${t.noResults}</div>`;
+                return;
+            }
+            
+            grid.innerHTML = schemesToShow.map(scheme => `
+                <div class="scheme-card fade-in">
+                    <div class="scheme-title">${scheme.name}</div>
+                    <div class="scheme-description">${scheme.description}</div>
+                    <div class="scheme-meta">
+                        <span class="scheme-state">${scheme.state}</span>
+                        <span class="scheme-type">${getTypeText(scheme.type)}</span>
+                    </div>
+                    <div class="scheme-buttons">
+                        <button class="btn btn-secondary" onclick="toggleDetails(this)">
+                            ${t.viewDetails}
+                        </button>
+                        <a href="${scheme.applyLink}" target="_blank" class="btn btn-primary">
+                            ${t.applyNow}
+                        </a>
+                    </div>
+                    <div class="scheme-details">
+                        <p><strong>${t.details}</strong> ${scheme.details}</p>
+                        <p><strong>${t.eligibility}</strong> ${scheme.eligibility}</p>
+                        <p><strong>${t.benefits}</strong> ${scheme.benefits}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getTypeText(type) {
+            const typeTexts = {
+                hi: {
+                    'subsidy': 'सब्सिडी योजना',
+                    'loan': 'ऋण योजना',
+                    'insurance': 'बीमा योजना',
+                    'training': 'प्रशिक्षण योजना',
+                    'equipment': 'उपकरण योजना',
+                    'income': 'आय सहायता',
+                    'pension': 'पेंशन योजना',
+                    'crop': 'फसल योजना'
+                },
+                en: {
+                    'subsidy': 'Subsidy Scheme',
+                    'loan': 'Loan Scheme',
+                    'insurance': 'Insurance Scheme',
+                    'training': 'Training Scheme',
+                    'equipment': 'Equipment Scheme',
+                    'income': 'Income Support',
+                    'pension': 'Pension Scheme',
+                    'crop': 'Crop Scheme'
+                }
+            };
+            
+            return typeTexts[currentLanguage]?.[type] || typeTexts['en'][type] || type;
+        }
+
+        function toggleDetails(button) {
+            const card = button.closest('.scheme-card');
+            const details = card.querySelector('.scheme-details');
+            const t = translations[currentLanguage];
+            
+            if (details.style.display === 'none' || !details.style.display) {
+                details.style.display = 'block';
+                button.textContent = t.hideDetails;
+            } else {
+                details.style.display = 'none';
+                button.textContent = t.viewDetails;
+            }
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            displaySchemes(schemes);
+            updateLanguage();
+        });
+    </script>
+</body>
+</html>
